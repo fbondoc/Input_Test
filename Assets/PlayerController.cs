@@ -6,7 +6,8 @@ public class PlayerController : MonoBehaviour
     float movementY;
     [SerializeField] float speed = 5.0f;
     Rigidbody2D rb;
-   bool isGrounded;
+    bool isGrounded;
+    int score = 0;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -54,5 +55,13 @@ public class PlayerController : MonoBehaviour
             isGrounded = false;
         }
     }
-
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Collectible"))
+        {
+            score++; 
+            collision.gameObject.SetActive(false);
+            Debug.Log("Score: " + score);
+        }
+    }
 }
