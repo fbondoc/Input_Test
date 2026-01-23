@@ -48,12 +48,8 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("isJumping", !isGrounded);
         //This code does the opposite of each other. If isGrounded is false then 
         // isJumping is true and vice versa
-        if (numJumpsAllowed > 0 && movementY > 0) 
-        {
-            Debug.Log(numJumpsAllowed);
-            numJumpsAllowed--;
-            rb.AddForce(new Vector2 (0,200));
-        }
+        Debug.Log("Y:" + movementY);
+        
     }
 
     void OnMove(InputValue value) {
@@ -61,7 +57,14 @@ public class PlayerController : MonoBehaviour
 
         movementX = v.x;
         movementY = v.y;
-        Debug.Log("Moving");
+    }
+
+    void OnJump() {
+        if (numJumpsAllowed > 0) 
+        {
+            numJumpsAllowed--;
+            rb.AddForce(new Vector2 (0,250));
+        }
     }
 
    private void OnCollisionEnter2D(Collision2D collision)
@@ -71,7 +74,6 @@ public class PlayerController : MonoBehaviour
             numJumpsAllowed = 2;
             isGrounded = true;
         }
-
     }
 
     void OnCollisionExit2D(Collision2D collision)
@@ -81,6 +83,7 @@ public class PlayerController : MonoBehaviour
             isGrounded = false;
         }
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Collectible"))
@@ -96,7 +99,6 @@ public class PlayerController : MonoBehaviour
     {   
         if (movementX > 0) 
         {
-            Debug.Log("Dashign Right");
             rb.AddForce(new Vector2(10000,0));
         }
         else if (movementX < 0)
