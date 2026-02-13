@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
+using UnityEngine.Events;
 public class PlayerController : MonoBehaviour
 {
     float movementX;
@@ -10,10 +11,17 @@ public class PlayerController : MonoBehaviour
     bool isGrounded;
     int score = 0;
 
+    [SerializeField] GameManager gameManager;
+
     int numJumpsAllowed = 2;
 
     Animator animator;
     SpriteRenderer spriteRenderer;
+
+    [SerializeField] AudioSource source;
+    [SerializeField] AudioClip jumpClip;
+
+    public UnityEvent playerDeath;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -49,6 +57,8 @@ public class PlayerController : MonoBehaviour
         //This code does the opposite of each other. If isGrounded is false then 
         // isJumping is true and vice versa
         Debug.Log("Y:" + movementY);
+
+      
         
     }
 
@@ -64,6 +74,7 @@ public class PlayerController : MonoBehaviour
         {
             numJumpsAllowed--;
             rb.AddForce(new Vector2 (0,250));
+            source.PlayOneShot(jumpClip);
         }
     }
 
@@ -90,7 +101,12 @@ public class PlayerController : MonoBehaviour
         {
             score++; 
             collision.gameObject.SetActive(false);
-            Debug.Log("Score: " + score);
+            gameManager.UpdateScore(score);
+        }
+
+        else if (collision.gameObject.CompareTag("Spike"))
+        {
+            playerDeath.Invoke();
         }
     }
 
